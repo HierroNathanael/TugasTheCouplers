@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Couplers</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>The Couplers</h1>
+        <p>"The Couplers" is a term referring to patterns or principles in software development that lead to high levels of interdependence between different parts of a software system. These high levels of interdependence often result in code that is difficult to understand, test, and maintain.</p>
+    </header>
+    <main>
+        <section id="feature-envy">
+            <h2>Feature Envy</h2>
+            <p>Feature Envy occurs when a method or function is more interested in the data of another object than its own host object's data. This can indicate that the method should belong to the other object.</p>
+            <h3>Example Code</h3>
+            <pre><code class="language-java">
+public class ShoppingCart {
+    private Product product;
+
+    public double calculateTotalPrice() {
+        // Feature Envy: This method is more interested in the data of the Product object
+        return product.getPrice() * product.getQuantity();
+    }
+}
+
+public class Product {
+    private double price;
+    private int quantity;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+}
+            </code></pre>
+            <h3>Refactor Code</h3>
+            <pre><code class="language-java">
+public class ShoppingCart {
+    private Product product;
+
+    public double calculateTotalPrice() {
+        return product.calculateTotalPrice(); // Delegating the calculation to the Product object
+    }
+}
+
+public class Product {
+    private double price;
+    private int quantity;
+
+    public double calculateTotalPrice() {
+        return price * quantity; // The method is moved to Product class
+    }
+}
+            </code></pre>
+            <h3>Explanation:</h3>
+            <p>After refactoring, the calculateTotalPrice() method was moved to the Product class as it is more suitable to handle the calculation of the total product price there. This reduces the dependency between classes and makes the code cleaner.</p>
+        </section>
+
+        <section id="inappropriate-intimacy">
+            <h2>Inappropriate Intimacy</h2>
+            <p>Inappropriate Intimacy happens when classes are tightly coupled, often accessing each other's internal data. This leads to increased complexity and decreased maintainability.</p>
+            <h3>Example Code</h3>
+            <pre><code class="language-java">
+public class User {
+    private String username;
+    private Email email;
+
+    public void setEmail(Email email) {
+        this.email = email;
+    }
+}
+
+public class Email {
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+}
+            </code></pre>
+            <h3>Refactor Code</h3>
+            <pre><code class="language-java">
+public class User {
+    private String username;
+    private String emailAddress;
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+}
+            </code></pre>
+            <h3>Explanation:</h3>
+            <p> After refactoring, the User class only stores the email address as a string, removing the direct dependency on the Email class. This increases flexibility and improves the class design.</p>
+        </section>
+
+        <section id="message-chains">
+            <h2>Message Chains</h2>
+            <p>Message Chains occur when client code navigates through a series of objects to get the information it needs. This increases dependency and makes the code fragile to changes.</p>
+            <h3>Example Code</h3>
+            <pre><code class="language-java">
+public class Order {
+    private Customer customer;
+
+    public String getCustomerAddress() {
+        return customer.getAddress().getStreet().getCity();
+    }
+}
+
+public class Customer {
+    private Address address;
+
+    public Address getAddress() {
+        return address;
+    }
+}
+
+public class Address {
+    private String street;
+    private String city;
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+}
+            </code></pre>
+            <h3>Refactor Code</h3>
+            <pre><code class="language-java">
+public class Order {
+    private Customer customer;
+
+    public String getCustomerCity() {
+        return customer.getCity();
+    }
+}
+
+public class Customer {
+    private Address address;
+
+    public String getCity() {
+        return address.getCity();
+    }
+}
+            </code></pre>
+            <h3>Explanation:</h3>
+            <p>After refactoring, this message chain was replaced with a direct call to the Customer class, removing excessive dependency and making the code easier to understand and maintain.</p>
+        </section>
+
+        <section id="middle-man">
+            <h2>Middle Man</h2>
+            <p>Middle Man is a class that delegates most of its work to another class. It adds unnecessary indirection and can be eliminated by directly using the delegate class.</p>
+            <h3>Example Code</h3>
+            <pre><code class="language-java">
+public class PaymentProcessor {
+    private PaymentGateway gateway;
+
+    public void processPayment(double amount) {
+        gateway.process(amount);
+    }
+}
+
+public class PaymentGateway {
+    public void process(double amount) {
+        // Processing payment
+    }
+}
+            </code></pre>
+            <h3>Refactor Code</h3>
+            <pre><code class="language-java">
+// After refactoring, the PaymentProcessor class directly calls the PaymentGateway class
+public class PaymentProcessor {
+    public void processPayment(double amount) {
+        PaymentGateway.process(amount);
+    }
+}
+
+public class PaymentGateway {
+    public static void process(double amount) {
+        // Processing payment
+    }
+}
+            </code></pre>
+            <h3>Explanation:</h3>
+            <p>After refactoring, the PaymentProcessor directly calls a static method in the PaymentGateway, eliminating the unnecessary middleman and making the code more direct and efficient.
+            </p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 All rights reserved.</p>
+    </footer>
+</body>
+</html>

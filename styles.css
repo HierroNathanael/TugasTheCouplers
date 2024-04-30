@@ -1,0 +1,44 @@
+body {
+    background-color: #222;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+header, footer {
+    padding: 20px;
+    background-color: #444;
+}
+
+h1, h2, h3 {
+    color: #fff;
+}
+
+section {
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: #333;
+    border-radius: 5px;
+}
+
+pre {
+    background-color: #555;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+code {
+    color: #eee;
+}
+
+ol, ul {
+    padding-left: 20px;
+}
+
+a {
+    color: #bbb;
+}
+
+a:hover {
+    color: #fff;
+}
